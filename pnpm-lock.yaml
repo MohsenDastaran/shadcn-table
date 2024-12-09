@@ -41,6 +41,9 @@ importers:
       datatables.net-colreorder-dt:
         specifier: 2.0.4
         version: 2.0.4
+      datatables.net-datetime:
+        specifier: ^1.5.4
+        version: 1.5.4
       datatables.net-responsive-dt:
         specifier: ^3.0.3
         version: 3.0.3
@@ -2062,6 +2065,9 @@ packages:
 
   datatables.net-colreorder@2.0.4:
     resolution: {integrity: sha512-j2d2uObivMaMLX+VTsIu9XEfucMPuS+OYurezQtPNHo0LgdXdgKvouEAUghVtlkTxW+jX7tjiSbagH2YWIS5Jg==}
+
+  datatables.net-datetime@1.5.4:
+    resolution: {integrity: sha512-WdFG04dr70UBBAta0WhciNDZk7kzCwpBbb77qUvUjJNCNIMf2wAooV46YAgJohRPfkn2TS8yZQbY9hMEn5fH2w==}
 
   datatables.net-dt@2.1.8:
     resolution: {integrity: sha512-/ScKmyKIpKXzjOJrnJLOWMf2jOQfrYjayNMhUyeMzf3jKhNevHNvImU9MQ/Bab9yheKLjHLL24IgnshAvRFrng==}
@@ -6786,6 +6792,8 @@ snapshots:
     dependencies:
       datatables.net: 2.1.8
       jquery: 3.7.1
+
+  datatables.net-datetime@1.5.4: {}
 
   datatables.net-dt@2.1.8:
     dependencies:
