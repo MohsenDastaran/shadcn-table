@@ -4,7 +4,14 @@
       <UiContainer class="flex h-14 items-center justify-between">
         <NuxtLink class="text-lg font-semibold" to="/">{{ SITE_NAME }}</NuxtLink>
         <div class="flex items-center gap-2">
-          <UiButton external target="_blank" variant="ghost" size="icon-sm" title="View on github">
+          <UiButton
+            external
+            href="https://github.com/MohsenDastaran/shadcn-table"
+            target="_blank"
+            variant="ghost"
+            size="icon-sm"
+            title="View on github"
+          >
             <span class="sr-only">View on github</span>
             <Icon name="lucide:github" class="size-4" />
           </UiButton>
