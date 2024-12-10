@@ -10,6 +10,7 @@ import "datatables.net-buttons/js/buttons.print.mjs";
 import "datatables.net-responsive-dt";
 import "datatables.net-searchbuilder-dt";
 import "datatables.net-select-dt";
+import "datatables.net-datetime";
 
 // @ts-expect-error - We are not creating a declaration file for this library
 window.JSZip = JSZip;
