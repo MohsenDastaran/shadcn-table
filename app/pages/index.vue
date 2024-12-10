@@ -1,8 +1,19 @@
 <template>
   <UiContainer class="py-5">
     <h1 class="mb-1 text-2xl font-bold">Users</h1>
+
+    <!-- Search Input -->
+    <input
+      v-model="searchTerm"
+      type="text"
+      placeholder="Search users by name, email, or phone..."
+      class="mb-5 w-full rounded-md border p-2"
+      @input="onSearch"
+    />
+    <UiGradientDivider class="" />
+
     <div class="h-[600px] overflow-y-auto">
-      <div class="mt-10">
+      <div class="mt-2">
         <UiTable>
           <UiTableHeader>
             <UiTableRow>
@@ -64,6 +75,7 @@
         </UiTable>
       </div>
     </div>
+
     <div class="mt-10 flex w-full justify-center">
       <UiPagination @update:page="onUpdatePage" :total="totalUsers" :sibling-count="1" />
     </div>
@@ -77,6 +89,8 @@
   const userStore = useUserStore();
   const users = ref<any[]>([]);
   const totalUsers = ref<number>(0);
+  const searchTerm = ref<string>("");
+
   const limit = 10;
 
   const fetchPaginatedUsers = async (page: number) => {
@@ -84,6 +98,12 @@
     const { results, total } = await userStore.fetchUsers({ offset, limit });
     users.value = results;
     totalUsers.value = total;
+  };
+
+  const onSearch = async () => {
+    await userStore.searchUsers(searchTerm.value);
+    users.value = userStore.users;
+    totalUsers.value = userStore.totalUsers;
   };
 
   const onUpdatePage = (pageNumber: number) => {
