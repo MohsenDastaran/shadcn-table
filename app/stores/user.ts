@@ -5,19 +5,13 @@ export const useUserStore = defineStore("User", () => {
   const totalUsers = ref<number>(0);
   const allUsers = ref<any[]>(usersData); // Full dataset
 
-  /**
-   * Normalize strings for search comparison
-   */
   const normalize = (value: string) =>
     value
-      .normalize("NFD") // Decompose special characters (José -> Jose)
-      .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase()
       .trim();
 
-  /**
-   * Fetch paginated users
-   */
   const fetchUsers = async (params: { offset: number; limit: number }) => {
     const paginatedData = allUsers.value.slice(params.offset, params.offset + params.limit);
     users.value = paginatedData;
@@ -29,14 +23,10 @@ export const useUserStore = defineStore("User", () => {
     };
   };
 
-  /**
-   * Search users without external libraries
-   */
   const searchUsers = async (searchTerm: string) => {
     const term = normalize(searchTerm);
 
     if (!term) {
-      // Reset if search term is empty
       allUsers.value = usersData;
     } else {
       allUsers.value = usersData.filter((user) =>
@@ -46,8 +36,29 @@ export const useUserStore = defineStore("User", () => {
       );
     }
 
-    // Reset to the first page after search
     await fetchUsers({ offset: 0, limit: 20 });
+  };
+
+  /**
+   * Sort entire dataset
+   */
+  const sortUsers = (column: string, direction: "asc" | "desc" | "") => {
+    allUsers.value.sort((a, b) => {
+      const valA = a[column];
+      const valB = b[column];
+
+      if (column === "submission_datetime") {
+        return direction === "asc"
+          ? new Date(valA).getTime() - new Date(valB).getTime()
+          : new Date(valB).getTime() - new Date(valA).getTime();
+      }
+
+      if (typeof valA === "string" && typeof valB === "string") {
+        return direction === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
+      }
+
+      return 0;
+    });
   };
 
   return {
@@ -55,6 +66,7 @@ export const useUserStore = defineStore("User", () => {
     totalUsers,
     fetchUsers,
     searchUsers,
+    sortUsers,
   };
 });
 

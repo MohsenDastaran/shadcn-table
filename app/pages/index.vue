@@ -18,27 +18,42 @@
           <UiTableHeader>
             <UiTableRow>
               <UiTableHead
-                class="sticky top-0 z-10 bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
+                @click="onSort('first_name')"
+                class="sticky top-0 z-10 cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
+                :sorted="sortKey === 'first_name'"
+                :sort-order
                 >Name</UiTableHead
               >
               <UiTableHead
-                class="sticky top-0 z-10 hidden bg-background/90 pl-0 font-bold text-foreground backdrop-blur lg:table-cell"
+                class="bg-background/9 0 sticky top-0 z-10 hidden pl-0 font-bold text-foreground backdrop-blur lg:table-cell"
                 >ID</UiTableHead
               >
               <UiTableHead
-                class="sticky top-0 z-10 hidden bg-background/90 pl-0 font-bold text-foreground backdrop-blur md:table-cell"
+                @click="onSort('order_type')"
+                :sorted="sortKey === 'order_type'"
+                :sort-order
+                class="bg-background/9 0 sticky top-0 z-10 hidden cursor-pointer pl-0 font-bold text-foreground backdrop-blur md:table-cell"
                 >Order Type</UiTableHead
               >
               <UiTableHead
-                class="sticky top-0 z-10 bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
+                @click="onSort('phone_number')"
+                :sorted="sortKey === 'phone_number'"
+                :sort-order
+                class="sticky top-0 z-10 cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
                 >Phone Number</UiTableHead
               >
               <UiTableHead
-                class="sticky top-0 z-10 bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
+                @click="onSort('provider_message')"
+                :sorted="sortKey === 'provider_message'"
+                :sort-order
+                class="sticky top-0 z-10 cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
                 >Provider Message</UiTableHead
               >
               <UiTableHead
-                class="sticky top-0 z-10 hidden bg-background/90 pl-0 font-bold text-foreground backdrop-blur md:table-cell"
+                class="sticky top-0 z-10 hidden cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur md:table-cell"
+                @click="onSort('submission_datetime')"
+                :sorted="sortKey === 'submission_datetime'"
+                :sort-order
                 >Submission Datetime</UiTableHead
               >
             </UiTableRow>
@@ -91,6 +106,9 @@
   const totalUsers = ref<number>(0);
   const searchTerm = ref<string>("");
 
+  const sortKey = ref<string>("");
+  const sortOrder: Ref<"asc" | "desc" | ""> = ref("");
+
   const limit = 10;
 
   const fetchPaginatedUsers = async (page: number) => {
@@ -106,11 +124,25 @@
     totalUsers.value = userStore.totalUsers;
   };
 
+  const onSort = (key: string) => {
+    if (sortKey.value === key) {
+      sortOrder.value =
+        sortOrder.value === "asc" ? "desc" : sortOrder.value === "desc" ? "" : "asc";
+    } else {
+      sortKey.value = key;
+      sortOrder.value = "asc";
+    }
+
+    if (sortKey.value && sortOrder.value) {
+      userStore.sortUsers(sortKey.value, sortOrder.value);
+      fetchPaginatedUsers(1); // Reset to the first page after sorting
+    }
+  };
+
   const onUpdatePage = (pageNumber: number) => {
     fetchPaginatedUsers(pageNumber);
   };
 
-  // Fetch initial data on mount
   onMounted(() => {
     fetchPaginatedUsers(1);
   });
@@ -119,10 +151,10 @@
 <style>
   *::-webkit-scrollbar {
     z-index: 11;
-    width: 6px;
+    width: 3px;
   }
   *::-webkit-scrollbar:horizontal {
-    height: 6px;
+    height: 3px;
   }
   *::-webkit-scrollbar-thumb {
     border-radius: 5px;
