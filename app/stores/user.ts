@@ -1,15 +1,12 @@
+import usersData from "@/assets/data.json";
+
 export const useUserStore = defineStore("User", () => {
   // Add proper types, don't be lazy
   const users = ref<any[]>([]);
 
   const fetchUsers = async () => {
-    const res = await $fetch<{ results: Array<any>; info: Record<string, string | number> }>(
-      "https://randomuser.me/api/?results=100"
-    );
-    users.value = res.results;
-    console.log(res.results);
-
-    return res;
+    users.value = usersData;
+    return usersData;
   };
   return {
     users,

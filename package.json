@@ -26,6 +26,7 @@
     "@vueform/multiselect": "^2.6.11",
     "datatables.net-buttons-dt": "^3.2.0",
     "datatables.net-colreorder-dt": "2.0.4",
+    "datatables.net-datetime": "^1.5.4",
     "datatables.net-responsive-dt": "^3.0.3",
     "datatables.net-rowreorder-dt": "1.5.0",
     "datatables.net-searchbuilder-dt": "^1.8.1",
