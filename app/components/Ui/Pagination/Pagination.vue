@@ -2,7 +2,9 @@
   <PaginationRoot v-bind="forwarded">
     <slot>
       <UiPaginationList v-slot="{ items }">
-        <slot name="first"><UiPaginationFirst as-child :icon="firstIcon" /> </slot>
+        <slot name="first"
+          ><UiPaginationFirst class="hidden md:flex" as-child :icon="firstIcon" />
+        </slot>
         <slot name="prev"><UiPaginationPrev as-child :icon="prevIcon" /> </slot>
 
         <template v-for="(page, index) in items" :key="index">
@@ -15,7 +17,9 @@
           />
         </template>
         <slot name="next"><UiPaginationNext as-child :icon="nextIcon" /> </slot>
-        <slot name="last"><UiPaginationLast as-child :icon="lastIcon" /></slot>
+        <slot name="last"
+          ><UiPaginationLast class="hidden md:flex" as-child :icon="lastIcon"
+        /></slot>
       </UiPaginationList>
     </slot>
   </PaginationRoot>
