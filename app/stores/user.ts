@@ -16,11 +16,7 @@ export const useUserStore = defineStore("User", () => {
     const paginatedData = allUsers.value.slice(params.offset, params.offset + params.limit);
     users.value = paginatedData;
     totalUsers.value = allUsers.value.length;
-
-    return {
-      results: paginatedData,
-      total: totalUsers.value,
-    };
+    return { results: paginatedData, total: totalUsers.value };
   };
 
   const searchUsers = async (searchTerm: string) => {
@@ -35,28 +31,30 @@ export const useUserStore = defineStore("User", () => {
         )
       );
     }
-
     await fetchUsers({ offset: 0, limit: 20 });
   };
 
   /**
-   * Sort entire dataset
+   * Multi-Column Sorting
    */
-  const sortUsers = (column: string, direction: "asc" | "desc" | "") => {
+  const sortUsers = (sortConfig: { column: string; direction: "asc" | "desc" }[]) => {
     allUsers.value.sort((a, b) => {
-      const valA = a[column];
-      const valB = b[column];
+      for (const { column, direction } of sortConfig) {
+        const valA = a[column];
+        const valB = b[column];
 
-      if (column === "submission_datetime") {
-        return direction === "asc"
-          ? new Date(valA).getTime() - new Date(valB).getTime()
-          : new Date(valB).getTime() - new Date(valA).getTime();
+        if (column === "submission_datetime") {
+          const diff = new Date(valA).getTime() - new Date(valB).getTime();
+          if (diff !== 0) {
+            return direction === "asc" ? diff : -diff;
+          }
+        } else if (typeof valA === "string" && typeof valB === "string") {
+          const comparison = valA.localeCompare(valB);
+          if (comparison !== 0) {
+            return direction === "asc" ? comparison : -comparison;
+          }
+        }
       }
-
-      if (typeof valA === "string" && typeof valB === "string") {
-        return direction === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA);
-      }
-
       return 0;
     });
   };

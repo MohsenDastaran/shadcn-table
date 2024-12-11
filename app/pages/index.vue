@@ -20,8 +20,8 @@
               <UiTableHead
                 @click="onSort('first_name')"
                 class="sticky top-0 z-10 cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
-                :sorted="sortKey === 'first_name'"
-                :sort-order
+                :sort-order="getSortOrder('first_name')"
+                :is-stroke="isHighPriority('first_name')"
                 >Name</UiTableHead
               >
               <UiTableHead
@@ -30,30 +30,30 @@
               >
               <UiTableHead
                 @click="onSort('order_type')"
-                :sorted="sortKey === 'order_type'"
-                :sort-order
+                :sort-order="getSortOrder('order_type')"
+                :is-stroke="isHighPriority('order_type')"
                 class="bg-background/9 0 sticky top-0 z-10 hidden cursor-pointer pl-0 font-bold text-foreground backdrop-blur md:table-cell"
                 >Order Type</UiTableHead
               >
               <UiTableHead
                 @click="onSort('phone_number')"
-                :sorted="sortKey === 'phone_number'"
-                :sort-order
+                :sort-order="getSortOrder('phone_number')"
+                :is-stroke="isHighPriority('phone_number')"
                 class="sticky top-0 z-10 cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
                 >Phone Number</UiTableHead
               >
               <UiTableHead
                 @click="onSort('provider_message')"
-                :sorted="sortKey === 'provider_message'"
-                :sort-order
+                :sort-order="getSortOrder('provider_message')"
+                :is-stroke="isHighPriority('provider_message')"
                 class="sticky top-0 z-10 cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur"
                 >Provider Message</UiTableHead
               >
               <UiTableHead
                 class="sticky top-0 z-10 hidden cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur md:table-cell"
                 @click="onSort('submission_datetime')"
-                :sorted="sortKey === 'submission_datetime'"
-                :sort-order
+                :sort-order="getSortOrder('submission_datetime')"
+                :is-stroke="isHighPriority('submission_datetime')"
                 >Submission Datetime</UiTableHead
               >
             </UiTableRow>
@@ -103,72 +103,61 @@
 
   const userStore = useUserStore();
   const users = ref<any[]>([]);
-  const totalUsers = ref<number>(0);
   const searchTerm = ref<string>("");
-
-  const sortKey = ref<string>("");
-  const sortOrder: Ref<"asc" | "desc" | ""> = ref("");
-
-  const limit = 10;
+  const totalUsers = ref<number>(0);
+  const sortConfig = ref<{ column: string; direction: "asc" | "desc" }[]>([]);
 
   const fetchPaginatedUsers = async (page: number) => {
-    const offset = (page - 1) * limit;
-    const { results, total } = await userStore.fetchUsers({ offset, limit });
+    const { results, total } = await userStore.fetchUsers({
+      offset: (page - 1) * 10,
+      limit: 10,
+    });
     users.value = results;
     totalUsers.value = total;
   };
-
   const onSearch = async () => {
     await userStore.searchUsers(searchTerm.value);
     users.value = userStore.users;
     totalUsers.value = userStore.totalUsers;
   };
+  const isHighPriority = (key: string) => sortConfig.value?.[0]?.column === key;
+  const getSortOrder = (key: string) => {
+    const config = sortConfig.value.find((c) => c.column === key);
+    return config ? config.direction : "";
+  };
 
   const onSort = (key: string) => {
-    if (sortKey.value === key) {
-      sortOrder.value =
-        sortOrder.value === "asc" ? "desc" : sortOrder.value === "desc" ? "" : "asc";
+    const existingConfig = sortConfig.value.find((c) => c.column === key);
+
+    if (existingConfig) {
+      // Toggle or unsort the column
+      if (existingConfig.direction === "asc") {
+        existingConfig.direction = "desc";
+      } else {
+        // Remove the column from sorting if already descending
+        sortConfig.value = sortConfig.value.filter((c) => c.column !== key);
+      }
     } else {
-      sortKey.value = key;
-      sortOrder.value = "asc";
+      // Add new column to sort
+      if (sortConfig.value.length === 2) {
+        sortConfig.value.shift(); // Remove the oldest sorted column
+      }
+      sortConfig.value.push({ column: key, direction: "asc" });
     }
 
-    if (sortKey.value && sortOrder.value) {
-      userStore.sortUsers(sortKey.value, sortOrder.value);
-      fetchPaginatedUsers(1); // Reset to the first page after sorting
-    }
+    userStore.sortUsers(sortConfig.value);
+    fetchPaginatedUsers(1); // Reset to the first page
+
+    console.log(existingConfig);
+    console.log(sortConfig.value);
   };
 
   const onUpdatePage = (pageNumber: number) => {
     fetchPaginatedUsers(pageNumber);
   };
-
   onMounted(() => {
     fetchPaginatedUsers(1);
   });
 </script>
 
-<style>
-  *::-webkit-scrollbar {
-    z-index: 11;
-    width: 3px;
-  }
-  *::-webkit-scrollbar:horizontal {
-    height: 3px;
-  }
-  *::-webkit-scrollbar-thumb {
-    border-radius: 5px;
-    width: 6px;
-    background: #b4bccc;
-  }
-  *::-webkit-scrollbar-corner {
-    background: #fff;
-  }
-  *::-webkit-scrollbar-track {
-    background: #fff;
-  }
-  *::-webkit-scrollbar-track-piece {
-    background: #fff;
-    width: 6px;
-  }
-</style>
+<style src="../assets/css/styles.css"></style>
