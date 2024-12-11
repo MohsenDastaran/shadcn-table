@@ -10,7 +10,8 @@
       class="mb-5 w-full rounded-md border p-2"
       @input="onSearch"
     />
-    <UiGradientDivider class="" />
+    <SearchBuilder @updateFilters="handleFilters" />
+    <UiGradientDivider />
 
     <div class="h-[600px] overflow-y-auto">
       <div class="mt-2">
@@ -99,6 +100,7 @@
 
 <script lang="ts" setup>
   import { useUserStore } from "@/stores/user";
+  import { debounce } from "lodash";
   import { onMounted, ref } from "vue";
 
   const userStore = useUserStore();
@@ -115,11 +117,12 @@
     users.value = results;
     totalUsers.value = total;
   };
-  const onSearch = async () => {
+  const onSearch = debounce(async () => {
     await userStore.searchUsers(searchTerm.value);
     users.value = userStore.users;
     totalUsers.value = userStore.totalUsers;
-  };
+  }, 400);
+
   const isHighPriority = (key: string) => sortConfig.value?.[0]?.column === key;
   const getSortOrder = (key: string) => {
     const config = sortConfig.value.find((c) => c.column === key);
@@ -147,9 +150,11 @@
 
     userStore.sortUsers(sortConfig.value);
     fetchPaginatedUsers(1); // Reset to the first page
-
-    console.log(existingConfig);
-    console.log(sortConfig.value);
+  };
+  const handleFilters = (newFilters: { column: string; condition: string; value: string }[]) => {
+    userStore.applyFilters(newFilters);
+    users.value = userStore.users;
+    totalUsers.value = userStore.totalUsers;
   };
 
   const onUpdatePage = (pageNumber: number) => {

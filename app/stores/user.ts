@@ -1,9 +1,11 @@
 import usersData from "@/assets/data.json";
 
 export const useUserStore = defineStore("User", () => {
-  const users = ref<any[]>([]);
-  const totalUsers = ref<number>(0);
-  const allUsers = ref<any[]>(usersData); // Full dataset
+  const users = ref<any[]>([]); // Paginated users for display
+  const totalUsers = ref<number>(0); // Total count of users (after filtering/searching)
+  const allUsers = ref<any[]>(usersData); // Current working dataset (after filtering/searching)
+  const baseUsers = ref<any[]>(usersData); // Base dataset for the combination of filtering and searching
+  const curretnTerm = ref<string>(""); // Base dataset for the combination of filtering and searching
 
   const normalize = (value: string) =>
     value
@@ -21,17 +23,19 @@ export const useUserStore = defineStore("User", () => {
 
   const searchUsers = async (searchTerm: string) => {
     const term = normalize(searchTerm);
-
+    curretnTerm.value = term;
     if (!term) {
-      allUsers.value = usersData;
+      // If no search term, reset to the filtered state (baseUsers)
+      allUsers.value = baseUsers.value;
     } else {
-      allUsers.value = usersData.filter((user) =>
+      // Filter within the currently filtered state (baseUsers)
+      allUsers.value = baseUsers.value.filter((user) =>
         Object.values(user).some(
           (value) => typeof value === "string" && normalize(value).includes(term)
         )
       );
     }
-    await fetchUsers({ offset: 0, limit: 10 });
+    await fetchUsers({ offset: 0, limit: 10 }); // Refresh paginated users
   };
 
   /**
@@ -59,12 +63,46 @@ export const useUserStore = defineStore("User", () => {
     });
   };
 
+  const applyFilters = async (filters: { column: string; condition: string; value: string }[]) => {
+    // Apply filters on the original dataset (usersData)
+    let filtered = usersData.filter((user: any) => {
+      return filters.every(({ column, condition, value }) => {
+        const userValue =
+          typeof user[column] === "string" ? normalize(user[column] || "") : user[column];
+        const normalizedValue = typeof user[column] === "string" ? normalize(value) : value;
+        switch (condition) {
+          case "equals":
+            return userValue === normalizedValue;
+          case "contains":
+            return userValue.includes(normalizedValue);
+          case "starts with":
+            return userValue.startsWith(normalizedValue);
+          case "ends with":
+            return userValue.endsWith(normalizedValue);
+          case "greater than":
+            return parseFloat(userValue) > parseFloat(normalizedValue);
+          case "less than":
+            return parseFloat(userValue) < parseFloat(normalizedValue);
+          default:
+            return false;
+        }
+      });
+    });
+
+    // Update the base dataset (filtered results become the new base)
+    baseUsers.value = filtered;
+
+    // Apply the current search term on the new filtered state
+    await searchUsers(curretnTerm.value);
+  };
+
   return {
     users,
     totalUsers,
     fetchUsers,
     searchUsers,
     sortUsers,
+    applyFilters,
   };
 });
 
