@@ -41,26 +41,48 @@ export const useUserStore = defineStore("User", () => {
   /**
    * Multi-Column Sorting
    */
+  const sortCache = new Map<string, any[]>();
+
   const sortUsers = (sortConfig: { column: string; direction: "asc" | "desc" }[]) => {
-    allUsers.value.sort((a, b) => {
+    if (!sortConfig.length) return;
+
+    // Generate a cache key based on sort configuration
+    const cacheKey = JSON.stringify(sortConfig);
+    if (sortCache.has(cacheKey)) {
+      allUsers.value = sortCache.get(cacheKey)!;
+      return;
+    }
+
+    // Clone the array to avoid in-place sorting
+    const sortedUsers = [...allUsers.value].sort((a, b) => {
       for (const { column, direction } of sortConfig) {
         const valA = a[column];
         const valB = b[column];
 
         if (column === "submission_datetime") {
-          const diff = new Date(valA).getTime() - new Date(valB).getTime();
-          if (diff !== 0) {
-            return direction === "asc" ? diff : -diff;
+          // Pre-compute timestamps for dates
+          const timeA = new Date(valA).getTime();
+          const timeB = new Date(valB).getTime();
+          if (timeA !== timeB) {
+            return direction === "asc" ? timeA - timeB : timeB - timeA;
           }
         } else if (typeof valA === "string" && typeof valB === "string") {
+          // Locale comparison for strings
           const comparison = valA.localeCompare(valB);
           if (comparison !== 0) {
             return direction === "asc" ? comparison : -comparison;
           }
+        } else if (valA !== valB) {
+          // Generic comparison for numbers or other types
+          return direction === "asc" ? (valA > valB ? 1 : -1) : valA < valB ? 1 : -1;
         }
       }
       return 0;
     });
+
+    // Cache the result
+    sortCache.set(cacheKey, sortedUsers);
+    allUsers.value = sortedUsers;
   };
 
   const applyFilters = async (filters: { column: string; condition: string; value: string }[]) => {
