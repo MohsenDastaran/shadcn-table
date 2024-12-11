@@ -21,7 +21,8 @@
     </div>
     <UiGradientDivider />
     <div class="h-[600px] overflow-y-auto">
-      <div class="mt-2">
+      <UiTableNotFound v-if="!users.length"> </UiTableNotFound>
+      <div v-else class="mt-2">
         <UiTable>
           <UiTableHeader>
             <UiTableRow>
@@ -66,6 +67,7 @@
               >
             </UiTableRow>
           </UiTableHeader>
+
           <UiTableBody>
             <template v-for="user in users" :key="user.id">
               <UiTableRow>
