@@ -3,7 +3,7 @@
     <h1 class="mb-1 text-2xl font-bold">Users</h1>
 
     <!-- Search Input -->
-    <input
+    <UiInput
       v-model="searchTerm"
       type="text"
       placeholder="Search users by name, email, or phone..."

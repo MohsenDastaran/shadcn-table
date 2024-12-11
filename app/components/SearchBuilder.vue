@@ -27,7 +27,12 @@
           />
         </UiSelectContent>
       </UiSelect>
-      <input v-model="filter.value" type="text" placeholder="Value" class="rounded-md border p-2" />
+      <UiInput
+        v-model="filter.value"
+        type="text"
+        placeholder="Value"
+        class="rounded-md border p-2"
+      />
       <UiButton
         size="xs"
         @click="removeFilter(index)"
@@ -37,9 +42,7 @@
       >
     </div>
     <div class="my-3 gap-3">
-      <UiButton class="me-2 bg-gray-700" @click="addFilter" variant="gooeyLeft"
-        >Add Condition</UiButton
-      >
+      <UiButton class="me-2" @click="addFilter" variant="gooeyLeft">Add Condition</UiButton>
       <UiButton class="me-2" @click="applyFilters" variant="gooeyRight">Apply Filters</UiButton>
     </div>
   </div>
