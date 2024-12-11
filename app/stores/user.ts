@@ -94,7 +94,7 @@ export const useUserStore = defineStore("User", () => {
         const normalizedValue = typeof user[column] === "string" ? normalize(value) : value;
         switch (condition) {
           case "equals":
-            return userValue === normalizedValue;
+            return userValue.toString() === normalizedValue;
           case "contains":
             return userValue.includes(normalizedValue);
           case "starts with":
