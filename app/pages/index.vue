@@ -11,8 +11,15 @@
       @input="onSearch"
     />
     <SearchBuilder @updateFilters="handleFilters" />
-    <UiGradientDivider />
+    <UiGradientDivider class="my-3" />
 
+    <div class="my-3 flex gap-1">
+      <UiButton variant="outline" @click="copyToClipboard(userStore.allUsers)">Copy</UiButton>
+      <UiButton variant="outline" @click="exportToCSV(userStore.allUsers)">CSV</UiButton>
+      <UiButton variant="outline" @click="exportToExcel(userStore.allUsers)">Excel</UiButton>
+      <UiButton variant="outline" @click="printTable(userStore.allUsers)">Print</UiButton>
+    </div>
+    <UiGradientDivider />
     <div class="h-[600px] overflow-y-auto">
       <div class="mt-2">
         <UiTable>

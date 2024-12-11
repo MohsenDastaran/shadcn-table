@@ -1,10 +1,14 @@
 <template>
   <div>
-    <div v-for="(filter, index) in filters" :key="index" class="flex w-6/12 items-center space-x-2">
+    <div
+      v-for="(filter, index) in filters"
+      :key="index"
+      class="flex w-full items-center space-x-2 md:w-6/12"
+    >
       <UiSelect v-model="filter.column">
-        <UiSelectTrigger placeholder="Select Column" />
+        <UiSelectTrigger placeholder="Column" />
         <UiSelectContent>
-          <UiSelectLabel>Columns</UiSelectLabel>
+          <UiSelectLabel>Select Column</UiSelectLabel>
           <UiSelectSeparator />
           <UiSelectItem
             v-for="(column, i) in columns"
@@ -15,9 +19,9 @@
         </UiSelectContent>
       </UiSelect>
       <UiSelect v-model="filter.condition">
-        <UiSelectTrigger placeholder="Select Condition" />
+        <UiSelectTrigger placeholder="Condition" />
         <UiSelectContent>
-          <UiSelectLabel>Conditions</UiSelectLabel>
+          <UiSelectLabel>Select Condition</UiSelectLabel>
           <UiSelectSeparator />
           <UiSelectItem
             v-for="(condition, i) in conditions"
@@ -42,7 +46,7 @@
       >
     </div>
     <div class="my-3 gap-3">
-      <UiButton class="me-2" @click="addFilter" variant="gooeyLeft">Add Condition</UiButton>
+      <UiButton class="me-2" @click="addFilter" variant="outline">Add Condition</UiButton>
       <UiButton class="me-2" @click="applyFilters" variant="gooeyRight">Apply Filters</UiButton>
     </div>
   </div>
