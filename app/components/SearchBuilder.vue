@@ -52,7 +52,7 @@
     </div>
     <div class="my-3 gap-3">
       <UiButton class="me-2" @click="addFilter" variant="outline">Add Condition</UiButton>
-      <UiButton class="me-2" @click="applyFilters" variant="gooeyRight">Apply Filters</UiButton>
+      <UiButton class="me-2" @click="applyFilters" variant="shine">Apply Filters</UiButton>
     </div>
   </div>
 </template>
