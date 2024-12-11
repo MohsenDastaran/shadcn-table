@@ -20,3 +20,9 @@
   background: #fff;
   width: 6px;
 }
+body .phone-number {
+  height: 25px;
+}
+body .phone-number::after {
+  translate: 0 5px;
+}

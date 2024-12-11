@@ -1,5 +1,5 @@
 <template>
-  <UiContainer class="py-5">
+  <UiContainer class="py-5" :key="appKey">
     <h1 class="mb-1 text-2xl font-bold">Users</h1>
 
     <!-- Search Input -->
@@ -18,10 +18,12 @@
       <UiButton variant="outline" @click="exportToCSV(userStore.allUsers)">CSV</UiButton>
       <UiButton variant="outline" @click="exportToExcel(userStore.allUsers)">Excel</UiButton>
       <UiButton variant="outline" @click="printTable(userStore.allUsers)">Print</UiButton>
+      <UiButton variant="gooeyLeft" class="ml-auto" @click="resetApp">Reset</UiButton>
     </div>
     <UiGradientDivider />
-    <div class="h-[600px] overflow-y-auto">
-      <div class="mt-2">
+    <div class="h-[650px] overflow-y-auto">
+      <UiTableNotFound v-if="!users.length"> </UiTableNotFound>
+      <div v-else class="mt-2">
         <UiTable>
           <UiTableHeader>
             <UiTableRow>
@@ -66,6 +68,7 @@
               >
             </UiTableRow>
           </UiTableHeader>
+
           <UiTableBody>
             <template v-for="user in users" :key="user.id">
               <UiTableRow>
@@ -101,9 +104,16 @@
                 <UiTableCell class="hidden pl-0 text-muted-foreground lg:table-cell">{{
                   user.order_type
                 }}</UiTableCell>
-                <UiTableCell class="pl-0 text-muted-foreground">{{
-                  user.phone_number
-                }}</UiTableCell>
+                <UiTableCell class="pl-0 text-muted-foreground">
+                  <UiButton
+                    :to="`tel:${user.phone_number}`"
+                    variant="linkHover2"
+                    class="phone-number"
+                  >
+                    {{ user.phone_number }}</UiButton
+                  >
+                  <!-- {{ user.phone_number }} -->
+                </UiTableCell>
                 <UiTableCell class="pl-0 text-muted-foreground">{{
                   user.provider_message
                 }}</UiTableCell>
@@ -129,6 +139,7 @@
   import { onMounted, ref } from "vue";
 
   const userStore = useUserStore();
+  const appKey = ref<number>(0);
   const users = ref<any[]>([]);
   const searchTerm = ref<string>("");
   const totalUsers = ref<number>(0);
@@ -184,6 +195,20 @@
 
   const onUpdatePage = (pageNumber: number) => {
     fetchPaginatedUsers(pageNumber);
+  };
+
+  const resetApp = async () => {
+    appKey.value++;
+    searchTerm.value = "";
+
+    // Re-fetch initial data
+    await fetchPaginatedUsers(1);
+    onSearch();
+    handleFilters([]);
+    push.success({
+      title: "Success",
+      message: "Reset Table data",
+    });
   };
   onMounted(() => {
     fetchPaginatedUsers(1);
