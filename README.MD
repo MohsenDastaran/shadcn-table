@@ -1,4 +1,12 @@
-# Sindibad App
+  <h3 align="center">Sindibad App</h3>
+
+  <p align="center">
+    feature-rich table listing the submitted orders
+    <br />
+    <br />
+    <a href="https://shadcn-table.netlify.app/">View Demo</a>
+  </p>
+</div>
 
 ## Requirements
 

@@ -71,10 +71,28 @@
               <UiTableRow>
                 <UiTableCell class="pl-0">
                   <div class="flex flex-col">
-                    <p class="font-medium">{{ user.first_name }}</p>
-                    <p class="text-muted-foreground lg:hidden">{{ user.id }}</p>
-                    <p class="text-muted-foreground md:hidden">{{ user.order_type }}</p>
-                    <p class="text-muted-foreground md:hidden">{{ user.submission_datetime }}</p>
+                    <p class="hidden font-medium lg:block">{{ user.first_name }}</p>
+                    <UiAccordion class="lg:hidden">
+                      <UiAccordionItem :value="user.first_name">
+                        <UiAccordionHeader>
+                          <UiAccordionTrigger
+                            class="mb-2 rounded-md px-3 text-left text-sm underline-offset-2 hover:bg-muted hover:no-underline"
+                            ><p class="font-medium">{{ user.first_name }}</p></UiAccordionTrigger
+                          >
+                        </UiAccordionHeader>
+                        <UiAccordionContent>
+                          <p class="text-muted-foreground">
+                            <strong class="mx-2">ID:</strong>{{ user.id }}
+                          </p>
+                          <p class="text-muted-foreground">
+                            <strong class="mx-2">Order Type:</strong>{{ user.order_type }}
+                          </p>
+                          <p class="text-muted-foreground">
+                            <strong class="mx-2">Datetime:</strong>{{ user.submission_datetime }}
+                          </p>
+                        </UiAccordionContent>
+                      </UiAccordionItem>
+                    </UiAccordion>
                   </div>
                 </UiTableCell>
                 <UiTableCell class="hidden pl-0 text-muted-foreground lg:table-cell">{{
