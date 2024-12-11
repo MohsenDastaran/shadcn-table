@@ -31,7 +31,7 @@ export const useUserStore = defineStore("User", () => {
         )
       );
     }
-    await fetchUsers({ offset: 0, limit: 20 });
+    await fetchUsers({ offset: 0, limit: 10 });
   };
 
   /**
