@@ -1,6 +1,3 @@
-/**
- * Replace these with the details of your website
- */
 import { SITE_NAME, SITE_TITLE } from "./app/utils/seo";
 
 export default defineNuxtConfig({

@@ -3,7 +3,7 @@
     <div
       v-for="(filter, index) in filters"
       :key="index"
-      class="flex w-full items-center space-x-2 md:w-6/12"
+      class="mb-2 flex w-full items-center space-x-2 md:w-6/12"
     >
       <UiSelect v-model="filter.column">
         <UiSelectTrigger placeholder="Column" />
