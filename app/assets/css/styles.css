@@ -1,0 +1,22 @@
+::-webkit-scrollbar {
+  z-index: 11;
+  width: 3px;
+}
+::-webkit-scrollbar:horizontal {
+  height: 3px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  width: 6px;
+  background: #b4bccc;
+}
+::-webkit-scrollbar-corner {
+  background: #fff;
+}
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+::-webkit-scrollbar-track-piece {
+  background: #fff;
+  width: 6px;
+}
