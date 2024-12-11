@@ -18,10 +18,10 @@
       <UiButton variant="outline" @click="exportToCSV(userStore.allUsers)">CSV</UiButton>
       <UiButton variant="outline" @click="exportToExcel(userStore.allUsers)">Excel</UiButton>
       <UiButton variant="outline" @click="printTable(userStore.allUsers)">Print</UiButton>
-      <UiButton variant="gooeyRight" class="ml-auto" @click="resetApp">Reset</UiButton>
+      <UiButton variant="gooeyLeft" class="ml-auto" @click="resetApp">Reset</UiButton>
     </div>
     <UiGradientDivider />
-    <div class="h-[600px] overflow-y-auto">
+    <div class="h-[650px] overflow-y-auto">
       <UiTableNotFound v-if="!users.length"> </UiTableNotFound>
       <div v-else class="mt-2">
         <UiTable>
@@ -104,9 +104,16 @@
                 <UiTableCell class="hidden pl-0 text-muted-foreground lg:table-cell">{{
                   user.order_type
                 }}</UiTableCell>
-                <UiTableCell class="pl-0 text-muted-foreground">{{
-                  user.phone_number
-                }}</UiTableCell>
+                <UiTableCell class="pl-0 text-muted-foreground">
+                  <UiButton
+                    :to="`tel:${user.phone_number}`"
+                    variant="linkHover2"
+                    class="phone-number"
+                  >
+                    {{ user.phone_number }}</UiButton
+                  >
+                  <!-- {{ user.phone_number }} -->
+                </UiTableCell>
                 <UiTableCell class="pl-0 text-muted-foreground">{{
                   user.provider_message
                 }}</UiTableCell>
