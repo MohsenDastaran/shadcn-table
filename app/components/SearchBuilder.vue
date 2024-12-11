@@ -27,6 +27,11 @@
             v-for="(condition, i) in conditions"
             :key="i"
             :value="condition.value"
+            :disabled="
+              !condition.type.includes(
+                columns.find((c) => c.value === filter.column)?.type as string
+              )
+            "
             :text="condition.label"
           />
         </UiSelectContent>
@@ -38,7 +43,7 @@
         class="rounded-md border p-2"
       />
       <UiButton
-        size="xs"
+        size="sm"
         @click="removeFilter(index)"
         variant="secondary"
         class="hover:text-red-800"
@@ -59,20 +64,20 @@
     { column: "", condition: "", value: "" },
   ]);
   const columns = [
-    { label: "Name", value: "first_name" },
-    { label: "ID", value: "id" },
-    { label: "Order Type", value: "order_type" },
-    { label: "Phone Number", value: "phone_number" },
-    { label: "Provider Message", value: "provider_message" },
-    { label: "Submission Datetime", value: "submission_datetime" },
+    { label: "Name", value: "first_name", type: "string" },
+    { label: "ID", value: "id", type: "number" },
+    { label: "Order Type", value: "order_type", type: "string" },
+    { label: "Phone Number", value: "phone_number", type: "string" },
+    { label: "Provider Message", value: "provider_message", type: "string" },
+    { label: "Submission Datetime", value: "submission_datetime", type: "string" },
   ];
   const conditions = [
-    { label: "Equals", value: "equals" },
-    { label: "Contains", value: "contains" },
-    { label: "Starts With", value: "starts with" },
-    { label: "Ends With", value: "ends with" },
-    { label: "Greater Than", value: "greater than" },
-    { label: "Less Than", value: "less than" },
+    { label: "Equals", value: "equals", type: ["string", "number"] },
+    { label: "Contains", value: "contains", type: ["string"] },
+    { label: "Starts With", value: "starts with", type: ["string"] },
+    { label: "Ends With", value: "ends with", type: ["string"] },
+    { label: "Greater Than", value: "greater than", type: ["number"] },
+    { label: "Less Than", value: "less than", type: ["number"] },
   ];
 
   const emit = defineEmits(["updateFilters"]);
@@ -86,6 +91,19 @@
   };
 
   const applyFilters = () => {
+    filters.value.forEach((e, i) => {
+      const selectedColumn = columns.find((c) => c.value === e.column);
+      const selectedCondition = conditions.find((c) => c.value === e.condition);
+      if (!selectedCondition?.type.includes(selectedColumn?.type as string)) {
+        push.error({
+          title: "Conflict Detected",
+          message: "invalid filter removed!",
+          duration: Infinity,
+        });
+        removeFilter(i);
+      }
+    });
+
     emit("updateFilters", filters.value);
   };
 </script>
