@@ -107,7 +107,7 @@
 
 <script lang="ts" setup>
   import { useUserStore } from "@/stores/user";
-  import { debounce } from "lodash";
+  import debounce from "lodash";
   import { onMounted, ref } from "vue";
 
   const userStore = useUserStore();
@@ -124,7 +124,7 @@
     users.value = results;
     totalUsers.value = total;
   };
-  const onSearch = debounce(async () => {
+  const onSearch = debounce.debounce(async () => {
     await userStore.searchUsers(searchTerm.value);
     users.value = userStore.users;
     totalUsers.value = userStore.totalUsers;
