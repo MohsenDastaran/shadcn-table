@@ -42,7 +42,7 @@
                 @click="onSort('order_type')"
                 :sort-order="getSortOrder('order_type')"
                 :is-stroke="isHighPriority('order_type')"
-                class="bg-background/9 0 sticky top-0 z-10 hidden cursor-pointer pl-0 font-bold text-foreground backdrop-blur md:table-cell"
+                class="bg-background/9 0 sticky top-0 z-10 hidden cursor-pointer pl-0 font-bold text-foreground backdrop-blur lg:table-cell"
                 >Order Type</UiTableHead
               >
               <UiTableHead
@@ -60,7 +60,7 @@
                 >Provider Message</UiTableHead
               >
               <UiTableHead
-                class="sticky top-0 z-10 hidden cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur md:table-cell"
+                class="sticky top-0 z-10 hidden cursor-pointer bg-background/90 pl-0 font-bold text-foreground backdrop-blur lg:table-cell"
                 @click="onSort('submission_datetime')"
                 :sort-order="getSortOrder('submission_datetime')"
                 :is-stroke="isHighPriority('submission_datetime')"
