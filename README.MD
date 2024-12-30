@@ -1,4 +1,4 @@
-  <h3 align="center">Sindibad App</h3>
+  <h3 align="center">shacn-table App</h3>
 
   <p align="center">
     feature-rich table listing the submitted orders
